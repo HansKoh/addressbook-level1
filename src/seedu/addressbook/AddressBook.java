@@ -1,12 +1,10 @@
 package seedu.addressbook;
-
 /*
  * NOTE : =============================================================
  * This class is written in a procedural fashion (i.e. not Object-Oriented)
  * Yes, it is possible to write non-OO code using an OO language.
  * ====================================================================
  */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,7 +20,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
-
 /*
  * NOTE : =============================================================
  * This class header comment below is brief because details of how to
@@ -451,6 +448,7 @@ public class AddressBook {
      */
     private static String executeFindPersons(String commandArgs) {
         final Set<String> keywords = extractKeywordsFromFindPersonArgs(commandArgs);
+        convertToLowerCase(keywords);
         final ArrayList<String[]> personsFound = getPersonsWithNameContainingAnyKeyword(keywords);
         showToUser(personsFound);
         return getMessageForPersonsDisplayedSummary(personsFound);
@@ -486,11 +484,23 @@ public class AddressBook {
         final ArrayList<String[]> matchedPersons = new ArrayList<>();
         for (String[] person : getAllPersonsInAddressBook()) {
             final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            convertToLowerCase(wordsInName);
             if (!Collections.disjoint(wordsInName, keywords)) {
                 matchedPersons.add(person);
             }
         }
         return matchedPersons;
+    }
+
+    private static void convertToLowerCase(Collection<String> strings)//This can use for any other Collection data type: eg.Set
+    {
+        String[] stringsArray = strings.toArray(new String[0]);
+        for (int i=0; i<stringsArray.length; ++i)
+        {
+            stringsArray[i] = stringsArray[i].toLowerCase();
+        }
+        strings.clear();
+        strings.addAll(Arrays.asList(stringsArray));
     }
 
     /**
